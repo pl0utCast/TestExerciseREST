@@ -1,15 +1,15 @@
 package main
 
 import (
+	_ "TestExerciseREST/docs"
 	"database/sql"
 	"fmt"
 
+	"github.com/gofiber/contrib/v3/swaggo"
 	"github.com/gofiber/fiber/v3"
 	_ "github.com/lib/pq"
 )
 
-// TIP <p>To run your code, right-click the code and select <b>Run</b>.</p> <p>Alternatively, click
-// the <icon src="AllIcons.Actions.Execute"/> icon in the gutter and select the <b>Run</b> menu item from here.</p>
 type product struct {
 	id      int
 	model   string
@@ -17,6 +17,10 @@ type product struct {
 	price   int
 }
 
+// @title Swaggo Example API
+// @version 1.0
+// @description this is sample
+// @license.name Apache 2.0
 func main() {
 
 	connStr := "user=postgres dbname=subscriptionsDB password=5597 sslmode=disable"
@@ -29,17 +33,18 @@ func main() {
 	defer db.Close()
 
 	rest := fiber.New()
+
+	rest.Get("/swagger/*", swaggo.HandlerDefault)
+
 	//Получение всех записей
-	rest.Get("/", func(c fiber.Ctx) error { // ← добавили error
-		rows, err := db.Query("select * from Products")
+	rest.Get("/getName", func(c fiber.Ctx) error { // ← добавили error
+		rows, err := db.Query("select * from products")
 		if err != nil {
 			panic(err)
 		}
 		products := []product{}
 
-		//Добавление из базы данных в
-		products = append(products, product{0, "ddf", "dfdf", 100})
-		if rows.Next() {
+		for rows.Next() {
 			// 2. Теперь сканируем
 			var p product
 
@@ -47,15 +52,53 @@ func main() {
 			if err != nil {
 				return c.Status(500).SendString(err.Error())
 			}
+			products = append(products, p)
 		}
 
-		result := fmt.Sprintln(products[0].model)
+		result := fmt.Sprintln(products)
 		return c.SendString(result)
 	})
 
-	//Отправка одной записи
-	rest.Post("/", func(c fiber.Ctx) error {
-		return c.SendString("OK")
+	rest.Get("/getName/:id", func(c fiber.Ctx) error {
+		rows, err := db.Query("select * from products where id=$1", c.Params("id"))
+		if err != nil {
+			panic(err)
+		}
+		var p product
+		rows.Next()
+		err = rows.Scan(&p.id, &p.model, &p.company, &p.price)
+		if err != nil {
+			return c.Status(500).SendString(err.Error())
+		}
+
+		result := fmt.Sprintln(p)
+		return c.SendString(result)
+	})
+
+	rest.Post("/PostNew/:id/:name/:desc/:price", func(c fiber.Ctx) error {
+		_, err := db.Query("insert into products(id, model, company, price) values($1, $2, $3, $4)",
+			c.Params("id"), c.Params("name"), c.Params("desc"), c.Params("price"))
+		if err != nil {
+			panic(err)
+		}
+		return c.SendString("Added Successfully")
+	})
+
+	rest.Delete("/deleteById/:id", func(c fiber.Ctx) error {
+		_, err = db.Query("Delete from products where id=$1", c.Params("id"))
+		if err != nil {
+			panic(err)
+		}
+		return c.SendString("Delete success")
+	})
+
+	rest.Put("/PutById/:id/:name/:desc/:price", func(c fiber.Ctx) error {
+		_, err = db.Query("Update products set model = $2, company = $3, price = $4 where id = $1",
+			c.Params("id"), c.Params("name"), c.Params("desc"), c.Params("price"))
+		if err != nil {
+			panic(err)
+		}
+		return c.SendString("Update success")
 	})
 
 	rest.Listen(":3000")
@@ -65,30 +108,40 @@ func main() {
 
 	//Подсчет суммы
 
-	/*db, err := sql.Open("postgres", connStr)
-	if err != nil {
-		panic(err)
-	}
-	defer db.Close()
+}
 
-	rows, err := db.Query("select * from Products")
-	if err != nil {
-		panic(err)
-	}
-	defer rows.Close()
-	products := []product{}
+// // @Param        id   path      string  true  "Account ID"
+// @Router /getName [get]
+func GetName(ctx fiber.Ctx) error {
+	return ctx.SendString("")
+}
 
-	for rows.Next() {
-		p := product{}
-		err := rows.Scan(&p.id, &p.model, &p.company, &p.price)
-		if err != nil {
-			fmt.Println(err)
-			continue
-		}
-		products = append(products, p)
-	}
-	for _, p := range products {
-		fmt.Println(p.id, p.model, p.company, p.price)
-	}*/
+// @Param id path integer true "product ID"
+// @Router /getName/{id} [get]
+func GetNameByID(ctx fiber.Ctx) error {
+	return ctx.SendString("")
+}
 
+// @Param id path integer true "product ID"
+// @Param name path string true "name"
+// @Param description path string true "description"
+// @Param price path integer true "price"
+// @Router /PostNew/{id}/{name}/{description}/{price} [post]
+func PostNew(ctx fiber.Ctx) error {
+	return ctx.SendString("")
+}
+
+// @Param id path integer true "product ID"
+// @Param name path string true "name"
+// @Param description path string true "description"
+// @Param price path integer true "price"
+// @Router /PutById/{id}/{name}/{description}/{price} [put]
+func PutById(ctx fiber.Ctx) error {
+	return ctx.SendString("")
+}
+
+// @Param id path integer true "product Id"
+// @Router /DeleteById/{id} [delete]
+func DeleteById(ctx fiber.Ctx) error {
+	return ctx.SendString("")
 }

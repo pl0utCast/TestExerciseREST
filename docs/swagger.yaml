@@ -1,0 +1,78 @@
+info:
+  contact: {}
+  description: this is sample
+  license:
+    name: Apache 2.0
+  title: Swaggo Example API
+  version: "1.0"
+paths:
+  /DeleteById/{id}:
+    delete:
+      parameters:
+      - description: product Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses: {}
+  /PostNew/{id}/{name}/{description}/{price}:
+    post:
+      parameters:
+      - description: product ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: name
+        in: path
+        name: name
+        required: true
+        type: string
+      - description: description
+        in: path
+        name: description
+        required: true
+        type: string
+      - description: price
+        in: path
+        name: price
+        required: true
+        type: integer
+      responses: {}
+  /PutById/{id}/{name}/{description}/{price}:
+    put:
+      parameters:
+      - description: product ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: name
+        in: path
+        name: name
+        required: true
+        type: string
+      - description: description
+        in: path
+        name: description
+        required: true
+        type: string
+      - description: price
+        in: path
+        name: price
+        required: true
+        type: integer
+      responses: {}
+  /getName:
+    get:
+      responses: {}
+  /getName/{id}:
+    get:
+      parameters:
+      - description: product ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses: {}
+swagger: "2.0"
