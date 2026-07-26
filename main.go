@@ -17,6 +17,9 @@ type product struct {
 	price   int
 }
 
+type subscription struct {
+}
+
 // @title Swaggo Example API
 // @version 1.0
 // @description this is sample
@@ -37,7 +40,7 @@ func main() {
 	rest.Get("/swagger/*", swaggo.HandlerDefault)
 
 	//Получение всех записей
-	rest.Get("/getName", func(c fiber.Ctx) error { // ← добавили error
+	rest.Get("/getName", func(c fiber.Ctx) error {
 		rows, err := db.Query("select * from products")
 		if err != nil {
 			panic(err)
@@ -72,6 +75,29 @@ func main() {
 		}
 
 		result := fmt.Sprintln(p)
+		return c.SendString(result)
+	})
+
+	rest.Get("/GetSubscriptionSum/:userId/:subscriptionName/:initialDate", func(c fiber.Ctx) error {
+		rows, err = db.Query("Select * from subscription Where \"userId\" = $1 and \"SubscriptionName\" = $2 and \"initialDate\" >=  $3",
+			c.Params("userId"), c.Params("subscriptionName"), c.Params("initialDate"))
+		if err != nil {
+			panic(err)
+		}
+		products := []product{}
+
+		for rows.Next() {
+			// 2. Теперь сканируем
+			var p product
+
+			err = rows.Scan(&p.id, &p.model, &p.company, &p.price)
+			if err != nil {
+				return c.Status(500).SendString(err.Error())
+			}
+			products = append(products, p)
+		}
+
+		result := fmt.Sprintln(products)
 		return c.SendString(result)
 	})
 
