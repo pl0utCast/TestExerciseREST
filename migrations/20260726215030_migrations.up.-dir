@@ -1,0 +1,7 @@
+CREATE TABLE IF NOT EXISTS public.subscription
+(
+    price integer,
+    "userId" uuid,
+    "initialDate" date,
+    "SubscriptionName" character varying(30) COLLATE pg_catalog."default"
+)

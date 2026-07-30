@@ -5,7 +5,9 @@ go 1.26.2
 require (
 	github.com/gofiber/contrib/v3/swaggo v1.0.8
 	github.com/gofiber/fiber/v3 v3.4.0
+	github.com/golang-migrate/migrate/v4 v4.19.1
 	github.com/lib/pq v1.12.3
+	github.com/swaggo/swag v1.16.6
 )
 
 require (
@@ -30,7 +32,6 @@ require (
 	github.com/mattn/go-isatty v0.0.22 // indirect
 	github.com/philhofer/fwd v1.2.0 // indirect
 	github.com/swaggo/files/v2 v2.0.2 // indirect
-	github.com/swaggo/swag v1.16.6 // indirect
 	github.com/tinylib/msgp v1.6.4 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasthttp v1.72.0 // indirect

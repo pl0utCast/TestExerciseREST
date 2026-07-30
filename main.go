@@ -17,9 +17,6 @@ type product struct {
 	price   int
 }
 
-type subscription struct {
-}
-
 // @title Swaggo Example API
 // @version 1.0
 // @description this is sample
@@ -79,7 +76,7 @@ func main() {
 	})
 
 	rest.Get("/GetSubscriptionSum/:userId/:subscriptionName/:initialDate", func(c fiber.Ctx) error {
-		rows, err = db.Query("Select * from subscription Where \"userId\" = $1 and \"SubscriptionName\" = $2 and \"initialDate\" >=  $3",
+		rows, err := db.Query("Select * from subscription Where \"userId\" = $1 and \"SubscriptionName\" = $2 and \"initialDate\" >=  $3",
 			c.Params("userId"), c.Params("subscriptionName"), c.Params("initialDate"))
 		if err != nil {
 			panic(err)
