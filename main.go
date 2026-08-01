@@ -4,6 +4,7 @@ import (
 	_ "TestExerciseREST/docs"
 	"database/sql"
 	"fmt"
+	"time"
 
 	"github.com/gofiber/contrib/v3/swaggo"
 	"github.com/gofiber/fiber/v3"
@@ -15,6 +16,14 @@ type product struct {
 	model   string
 	company string
 	price   int
+}
+
+type subscription struct {
+	id          int
+	Name        string
+	Price       float64
+	UserId      string
+	InitialDate time.Time
 }
 
 // @title Swaggo Example API
@@ -59,6 +68,7 @@ func main() {
 		return c.SendString(result)
 	})
 
+	//Получение одной записи
 	rest.Get("/getName/:id", func(c fiber.Ctx) error {
 		rows, err := db.Query("select * from products where id=$1", c.Params("id"))
 		if err != nil {
@@ -76,28 +86,26 @@ func main() {
 	})
 
 	rest.Get("/GetSubscriptionSum/:userId/:subscriptionName/:initialDate", func(c fiber.Ctx) error {
-		rows, err := db.Query("Select * from subscription Where \"userId\" = $1 and \"SubscriptionName\" = $2 and \"initialDate\" >=  $3",
+		rows, err := db.Query("Select sum(price) from subscription Where \"userId\" = $1 and \"SubscriptionName\" = $2 and \"initialDate\" >=  $3",
 			c.Params("userId"), c.Params("subscriptionName"), c.Params("initialDate"))
 		if err != nil {
 			panic(err)
 		}
-		products := []product{}
 
+		sum := 0.0
 		for rows.Next() {
-			// 2. Теперь сканируем
-			var p product
 
-			err = rows.Scan(&p.id, &p.model, &p.company, &p.price)
+			err = rows.Scan(&sum)
 			if err != nil {
 				return c.Status(500).SendString(err.Error())
 			}
-			products = append(products, p)
 		}
 
-		result := fmt.Sprintln(products)
-		return c.SendString(result)
+		sumstr := fmt.Sprintln(sum)
+		return c.SendString(sumstr)
 	})
 
+	//Добавление записи
 	rest.Post("/PostNew/:id/:name/:desc/:price", func(c fiber.Ctx) error {
 		_, err := db.Query("insert into products(id, model, company, price) values($1, $2, $3, $4)",
 			c.Params("id"), c.Params("name"), c.Params("desc"), c.Params("price"))
@@ -107,6 +115,7 @@ func main() {
 		return c.SendString("Added Successfully")
 	})
 
+	//Удаление записи
 	rest.Delete("/deleteById/:id", func(c fiber.Ctx) error {
 		_, err = db.Query("Delete from products where id=$1", c.Params("id"))
 		if err != nil {
@@ -115,6 +124,7 @@ func main() {
 		return c.SendString("Delete success")
 	})
 
+	//Изменение записи
 	rest.Put("/PutById/:id/:name/:desc/:price", func(c fiber.Ctx) error {
 		_, err = db.Query("Update products set model = $2, company = $3, price = $4 where id = $1",
 			c.Params("id"), c.Params("name"), c.Params("desc"), c.Params("price"))
@@ -124,13 +134,9 @@ func main() {
 		return c.SendString("Update success")
 	})
 
-	rest.Listen(":3000")
-	//Изменение записи
-
-	//Удаление записи
-
 	//Подсчет суммы
 
+	rest.Listen(":3000")
 }
 
 // // @Param        id   path      string  true  "Account ID"
@@ -168,3 +174,9 @@ func PutById(ctx fiber.Ctx) error {
 func DeleteById(ctx fiber.Ctx) error {
 	return ctx.SendString("")
 }
+
+// @Param id path string true "userId"
+// @Param Name path string true "Name"
+// @Param Date path string true "Date"
+// @Router /GetSubscriptionSum/{id}/{Name}/{Date} [get]
+func GetSubscriptionSum(ctx fiber.Ctx) error { return ctx.SendString("") }
