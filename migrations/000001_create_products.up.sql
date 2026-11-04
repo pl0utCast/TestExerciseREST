@@ -1,0 +1,35 @@
+CREATE TABLE IF NOT EXISTS products (
+                                        id      INTEGER PRIMARY KEY,
+                                        model   TEXT NOT NULL,
+                                        company TEXT NOT NULL,
+                                        price   INTEGER NOT NULL
+);
+
+INSERT INTO products (id, model, company, price) VALUES
+                                                     (1, 'Galaxy S24', 'Samsung', 89990),
+                                                     (2, 'Galaxy S24 Ultra', 'Samsung', 139990),
+                                                     (3, 'Galaxy A55', 'Samsung', 34990),
+                                                     (4, 'iPhone 15', 'Apple', 99990),
+                                                     (5, 'iPhone 15 Pro', 'Apple', 149990),
+                                                     (6, 'iPhone 15 Pro Max', 'Apple', 179990),
+                                                     (7, 'iPhone SE', 'Apple', 54990),
+                                                     (8, 'Pixel 8', 'Google', 79990),
+                                                     (9, 'Pixel 8 Pro', 'Google', 109990),
+                                                     (10, 'Pixel 8a', 'Google', 54990),
+                                                     (11, 'Xiaomi 14', 'Xiaomi', 69990),
+                                                     (12, 'Xiaomi 14 Ultra', 'Xiaomi', 119990),
+                                                     (13, 'Redmi Note 13', 'Xiaomi', 24990),
+                                                     (14, 'Poco X6 Pro', 'Xiaomi', 39990),
+                                                     (15, 'Huawei P60 Pro', 'Huawei', 89990),
+                                                     (16, 'Huawei Mate 60', 'Huawei', 109990),
+                                                     (17, 'OnePlus 12', 'OnePlus', 84990),
+                                                     (18, 'OnePlus Nord 3', 'OnePlus', 44990),
+                                                     (19, 'Nothing Phone 2', 'Nothing', 64990),
+                                                     (20, 'Nothing Phone 2a', 'Nothing', 34990),
+                                                     (21, 'Honor Magic 6', 'Honor', 79990),
+                                                     (22, 'Honor 90', 'Honor', 39990),
+                                                     (23, 'Motorola Edge 50', 'Motorola', 49990),
+                                                     (24, 'Motorola Razr 40', 'Motorola', 89990),
+                                                     (25, 'Sony Xperia 1 V', 'Sony', 129990),
+                                                     (26, 'Sony Xperia 10 V', 'Sony', 54990),
+                                                     (27, 'Oppo Find X7', 'Oppo', 94990);

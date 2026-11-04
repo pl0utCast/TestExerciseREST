@@ -24,34 +24,6 @@
                 "responses": {}
             }
         },
-        "/GetSubscriptionSum/{id}/{Name}/{Date}": {
-            "get": {
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "userId",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "Name",
-                        "name": "Name",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "Date",
-                        "name": "Date",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {}
-            }
-        },
         "/PostNew/{id}/{name}/{description}/{price}": {
             "post": {
                 "parameters": [

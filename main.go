@@ -4,7 +4,6 @@ import (
 	_ "TestExerciseREST/docs"
 	"database/sql"
 	"fmt"
-	"time"
 
 	"github.com/gofiber/contrib/v3/swaggo"
 	"github.com/gofiber/fiber/v3"
@@ -18,21 +17,13 @@ type product struct {
 	price   int
 }
 
-type subscription struct {
-	id          int
-	Name        string
-	Price       float64
-	UserId      string
-	InitialDate time.Time
-}
-
 // @title Swaggo Example API
 // @version 1.0
 // @description this is sample
 // @license.name Apache 2.0
 func main() {
 
-	connStr := "user=postgres dbname=subscriptionsDB password=5597 sslmode=disable"
+	connStr := "user=postgres dbname=subscriptions password=1234 sslmode=disable"
 
 	db, err := sql.Open("postgres", connStr)
 
@@ -85,26 +76,6 @@ func main() {
 		return c.SendString(result)
 	})
 
-	rest.Get("/GetSubscriptionSum/:userId/:subscriptionName/:initialDate", func(c fiber.Ctx) error {
-		rows, err := db.Query("Select sum(price) from subscription Where \"userId\" = $1 and \"SubscriptionName\" = $2 and \"initialDate\" >=  $3",
-			c.Params("userId"), c.Params("subscriptionName"), c.Params("initialDate"))
-		if err != nil {
-			panic(err)
-		}
-
-		sum := 0.0
-		for rows.Next() {
-
-			err = rows.Scan(&sum)
-			if err != nil {
-				return c.Status(500).SendString(err.Error())
-			}
-		}
-
-		sumstr := fmt.Sprintln(sum)
-		return c.SendString(sumstr)
-	})
-
 	//Добавление записи
 	rest.Post("/PostNew/:id/:name/:desc/:price", func(c fiber.Ctx) error {
 		_, err := db.Query("insert into products(id, model, company, price) values($1, $2, $3, $4)",
@@ -133,8 +104,6 @@ func main() {
 		}
 		return c.SendString("Update success")
 	})
-
-	//Подсчет суммы
 
 	rest.Listen(":3000")
 }
@@ -174,9 +143,3 @@ func PutById(ctx fiber.Ctx) error {
 func DeleteById(ctx fiber.Ctx) error {
 	return ctx.SendString("")
 }
-
-// @Param id path string true "userId"
-// @Param Name path string true "Name"
-// @Param Date path string true "Date"
-// @Router /GetSubscriptionSum/{id}/{Name}/{Date} [get]
-func GetSubscriptionSum(ctx fiber.Ctx) error { return ctx.SendString("") }
